@@ -49,10 +49,9 @@ class LineSplitStream extends stream.Transform {
     _transform(chunk, encoding, callback) {
       let strTemp = '';
       //console.log(chunk.toString().split(/(\s)/));
-      console.log(chunk.toString().replace(/ +/g , ' ').split(/( |\r\n)/m)); // '\r\n'
-      chunk.toString().replace(/ +/g , ' ').split(/(\s)/).forEach((item, i, arr)=>{
-       /*  /\s+/  */
-       /*   /([ |\b])/)  */
+      //console.log(chunk.toString().replace(/ +/g , ' ').split(/( |\r\n)/m)); 
+      chunk.toString().replace(/ +/g , ' ').split(/( |\r\n)/m).forEach((item, i, arr)=>{
+   
        if (item===os.EOL) {
         //console.log('-----------EOL-----------');
         this.push(strTemp + os.EOL);
