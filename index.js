@@ -2,10 +2,11 @@ const LineSplitStream = require('./line-split');
 const {createReadStream, createWriteStream} = require('fs');
 const path = require('path');
 
-const FILE_NAME = path.resolve(__dirname/*process.cwd()*/, './input.txt');
+const INPUT_FILE_NAME = path.resolve(__dirname/*process.cwd()*/, './input.txt');
+const OUTPUT_FILE_NAME = path.resolve(__dirname/*process.cwd()*/, './output.txt');
 
-const readStream = createReadStream(FILE_NAME);
-const writeStream = createWriteStream(`${FILE_NAME}.bak`, {flags: 'w'});
+const readStream = createReadStream(INPUT_FILE_NAME);
+const writeStream = createWriteStream(OUTPUT_FILE_NAME, {flags: 'w'});
 const linesSplitStream = new LineSplitStream({encoding: 'utf-8', lineLength: 23});
 /* pipe method */
 
