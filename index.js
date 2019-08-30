@@ -25,5 +25,5 @@ readStream.on('error', err => {
 // writeStream.on('error', );
 
 readStream.once('close', () => {
-  console.log("Stream closed");
+  console.log("Read stream closed");
 });

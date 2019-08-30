@@ -27,9 +27,9 @@ class LineSplitStream extends stream.Transform {
     }
 
     canHyphenate(str){
-        if (str.length < 6) return false; //правило 1
+        if (str.length < 6) return false;            // правило 1
         if (str === str.toUpperCase()) return false; // правило 2
-        if (isFinite(str)) return false; //правило 3
+        if (isFinite(str)) return false;             // правило 3
         
         return true;
     }
@@ -48,33 +48,28 @@ class LineSplitStream extends stream.Transform {
      
     _transform(chunk, encoding, callback) {
       let strTemp = '';
-      //console.log(chunk.toString().split(/(\s)/));
-      //console.log(chunk.toString().replace(/ +/g , ' ').split(/( |\r\n)/m)); 
-      chunk.toString().replace(/ +/g , ' ').split(/( |\r\n)/m).forEach((item, i, arr)=>{
+       
+      chunk.toString().replace(/ +/g , ' ').split(/( |\r?\n)/m).forEach((item, i, arr)=>{
    
-       if (item===os.EOL) {
-        //console.log('-----------EOL-----------');
-        this.push(strTemp + os.EOL);
+       
+        if ((item==='\r\n') || (item==='\n')){
+       
+        this.push(strTemp + item);
         strTemp='';
        } else if (strTemp.length + item.length < this._lineLength) {               
-          /*if ((i + 1 < arr.length) && ((strTemp.length + arr[i+1].length < this._lineLength) || (this.canHyphenate(arr[i + 1])))) 
-          {strTemp+=(item + ' ')} else 
-          {
-              strTemp+=item;
-          };
-        */
-        strTemp+=item;
+          
+        if ((item ===' ') && (strTemp === '')) {} else strTemp+=item;
       } else {
           if ( i < arr.length && strTemp.length < this._lineLength - 4 && this.canHyphenate(item)) 
           {
               const [leftover, rest] = this.hyphenate(item, this._lineLength - strTemp.length );
               
               this.push(strTemp + leftover + os.EOL);
-              strTemp = rest; //+ ' ';
+              strTemp = rest; 
 
           } else {              
               this.push(strTemp + os.EOL);
-              strTemp = item;// + ' ';
+              if (item===' ') {strTemp = ''} else {strTemp = item};
           }
           
       }
