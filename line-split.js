@@ -27,16 +27,17 @@ class LineSplitStream extends stream.Transform {
     }
 
     canHyphenate(str){
-        if (str.length < 6) return false;            // правило 1
-        if (str === str.toUpperCase()) return false; // правило 2
-        if (isFinite(str)) return false;             // правило 3
+        //if (str.length < 6) return false;            // правило 1
+        if (str.replace(/[.,":!\(\)\?]/,'').length < 6) return false;   // правило 1
+        if (str === str.toUpperCase()) return false;                    // правило 2
+        if (isFinite(str)) return false;                                // правило 3
         
         return true;
     }
 
     hyphenate(str, num) {
         //num - количество символов, которые могут "влезть" в остаток строки
-                
+        let numWithoutPunctuation = str.replace(/[.,":!\(\)\?]/,'').length      
          let leftCharsCount = (str.length - num < 3 ? str.length - 2 : num)
      
          if (str[leftCharsCount - 1] === "-") {console.log('GOT IT');console.log(str.slice(0, leftCharsCount)); }
@@ -61,6 +62,10 @@ class LineSplitStream extends stream.Transform {
         if ((item ===' ') && (strTemp === '')) {} else strTemp+=item;
       } else {
           if ( i < arr.length && strTemp.length < this._lineLength - 4 && this.canHyphenate(item)) 
+          // здесь сразу надо смотреть сколько символов можно перенести и передавать в функцию canHyphenate
+          // Чтобы она могла смотреть на наличие знаков пунктуации вначале
+          // и не позволяла переносить например "ab-
+          // cde
           {
               const [leftover, rest] = this.hyphenate(item, this._lineLength - strTemp.length );
               
